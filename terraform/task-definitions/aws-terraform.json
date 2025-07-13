@@ -1,0 +1,44 @@
+[
+  {
+    "name": "ecs-terraform-agent",
+    "image": "570730370608.dkr.ecr.us-east-1.amazonaws.com/ecs-terraform-agent:latest",
+    "essential": true,
+    "enableExecuteCommand": true,
+    "command": [
+      "-url",
+      "https://jenkins.projectsoftware.net/",
+      "-secret",
+      "${JENKINS_SECRET}",
+      "-name",
+      "${JENKINS_NAME}",
+      "-workDir", 
+      "/home/jenkins"
+    ],
+    "portMappings": [
+      {
+        "containerPort": 8080,
+        "hostPort": 8080,
+        "protocol": "project"
+      },
+      {
+        "containerPort": 50000,
+        "hostPort": 50000,
+        "protocol": "project"
+      }
+    ],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "/ecs/terraform-agent",
+        "awslogs-region": "us-east-1",
+        "awslogs-stream-prefix": "ecs"
+      }
+    },
+    "environment": [
+      {
+        "name": "JENKINS_WEB_SOCKET",
+        "value": "true"
+      }
+    ]
+    }
+]
